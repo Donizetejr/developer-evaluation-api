@@ -9,6 +9,8 @@ namespace Ambev.DeveloperEvaluation.ORM;
 public class DefaultContext : DbContext
 {
     public DbSet<User> Users { get; set; }
+    public DbSet<Sale> Sales { get; set; }
+    public DbSet<SaleItem> SaleItems { get; set; }
 
     public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
     {
@@ -18,6 +20,21 @@ public class DefaultContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Sale>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.SaleNumber).IsRequired();
+            entity.HasMany(x => x.Items).WithOne().OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<SaleItem>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.ProductId).IsRequired();
+            entity.Property(x => x.Quantity).IsRequired();
+            entity.Property(x => x.UnitPrice).IsRequired();
+        });
     }
 }
 public class YourDbContextFactory : IDesignTimeDbContextFactory<DefaultContext>

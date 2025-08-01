@@ -5,20 +5,25 @@
         public Guid Id { get; private set; }
         public string SaleNumber { get; private set; }
         public DateTime Date { get; private set; }
-        public string CustomerId { get; private set; }
+        public Guid CustomerId { get; private set; }
         public string CustomerName { get; private set; }
-        public string BranchId { get; private set; }
+        public Guid BranchId { get; private set; }
         public string BranchName { get; private set; }
-        public List<SaleItem> Items { get; private set; }
+        public List<SaleItem> Items { get; private set; } = new();
         public bool IsCancelled { get; private set; }
 
-        public Sale()
-        {
-            Items = new List<SaleItem>();
-        }
+        public decimal GetTotal() => Items.Sum(i => i.Total);
 
-        public Sale(string saleNumber, DateTime date, string customerId, string customerName,
-                    string branchId, string branchName, List<SaleItem> items)
+        private Sale() { }
+
+        public Sale(
+            string saleNumber,
+            DateTime date,
+            Guid customerId,
+            string customerName,
+            Guid branchId,
+            string branchName,
+            List<SaleItem> items)
         {
             Id = Guid.NewGuid();
             SaleNumber = saleNumber;
@@ -29,23 +34,11 @@
             BranchName = branchName;
             Items = items ?? new List<SaleItem>();
             IsCancelled = false;
+
+            foreach (var item in Items)
+                item.CalculateDiscount();
         }
 
-        public Sale(string saleNumber, DateTime date, string customerName, string branchId, string branchName, List<SaleItem> items)
-        {
-            SaleNumber = saleNumber;
-            Date = date;
-            CustomerName = customerName;
-            BranchId = branchId;
-            BranchName = branchName;
-            Items = items;
-        }
-
-        public void Cancel()
-        {
-            IsCancelled = true;
-        }
-
-        public decimal GetTotal() => Items.Sum(i => i.Total);
+        public void Cancel() => IsCancelled = true;
     }
 }

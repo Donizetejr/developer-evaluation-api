@@ -6,7 +6,7 @@
         public DateTime Date { get; set; }
         public Guid CustomerId { get; set; }
         public string CustomerName { get; set; }
-        public string BranchId { get; set; }
+        public Guid BranchId { get; set; }
         public string BranchName { get; set; }
         public List<CreateSaleItemRequest> Items { get; set; } = new();
     }

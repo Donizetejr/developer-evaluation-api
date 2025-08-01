@@ -3,16 +3,21 @@
     public class SaleItem
     {
         public Guid Id { get; private set; }
-        public string ProductId { get; private set; }
+        public Guid ProductId { get; private set; }
         public string ProductName { get; private set; }
         public int Quantity { get; private set; }
         public decimal UnitPrice { get; private set; }
         public decimal Discount { get; private set; }
         public decimal Total => (UnitPrice * Quantity) - Discount;
 
-        public SaleItem() { }
+        // EF Core navigation
+        public Guid SaleId { get; private set; }
+        public Sale Sale { get; private set; }
 
-        public SaleItem(string productId, string productName, int quantity, decimal unitPrice)
+        // Construtor para EF Core
+        private SaleItem() { }
+
+        public SaleItem(Guid productId, string productName, int quantity, decimal unitPrice)
         {
             if (quantity > 20)
                 throw new DomainException("It is not allowed to sell more than 20 items of the same product.");
@@ -22,22 +27,18 @@
             ProductName = productName;
             Quantity = quantity;
             UnitPrice = unitPrice;
-            Discount = CalculateDiscount(quantity, unitPrice);
+
+            CalculateDiscount();
         }
 
-        public SaleItem(int quantity, decimal unitPrice)
+        public void CalculateDiscount()
         {
-            Quantity = quantity;
-            UnitPrice = unitPrice;
-        }
-
-        private decimal CalculateDiscount(int quantity, decimal unitPrice)
-        {
-            if (quantity >= 10 && quantity <= 20)
-                return quantity * unitPrice * 0.2m;
-            else if (quantity >= 4)
-                return quantity * unitPrice * 0.1m;
-            return 0;
+            if (Quantity >= 10 && Quantity <= 20)
+                Discount = Quantity * UnitPrice * 0.20m;
+            else if (Quantity >= 4)
+                Discount = Quantity * UnitPrice * 0.10m;
+            else
+                Discount = 0;
         }
     }
 }

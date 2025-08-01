@@ -23,12 +23,16 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.Handlers
                 throw new ArgumentException("The sale must contain at least one item.");
 
             var items = request.Items.Select(i => new SaleItem(
+                i.ProductId,
+                i.ProductName,
                 i.Quantity,
-                i.UnitPrice)).ToList();
+                i.UnitPrice
+            )).ToList();
 
             var sale = new Sale(
                 request.SaleNumber,
                 request.Date,
+                request.CustomerId,
                 request.CustomerName,
                 request.BranchId,
                 request.BranchName,

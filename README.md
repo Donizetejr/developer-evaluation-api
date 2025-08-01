@@ -1,3 +1,170 @@
+
+# 💼 Ambev Developer Evaluation API
+
+This project is an API for sales management, developed as part of a technical evaluation. The application uses a layered architecture with DDD, MediatR, and Entity Framework Core with PostgreSQL.
+
+---
+
+## 🚀 Tech Stack
+
+- .NET 8
+- ASP.NET Core
+- Entity Framework Core
+- PostgreSQL
+- Docker
+- MediatR
+- AutoMapper
+- Serilog
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── Ambev.DeveloperEvaluation.Application
+├── Ambev.DeveloperEvaluation.Common
+├── Ambev.DeveloperEvaluation.Domain
+├── Ambev.DeveloperEvaluation.IoC
+├── Ambev.DeveloperEvaluation.ORM
+└── Ambev.DeveloperEvaluation.WebApi
+```
+
+---
+
+## ⚙️ Local Setup
+
+### 1. Prerequisites
+
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [PostgreSQL](https://www.postgresql.org/) running locally (default port: 5432)
+- [Docker](https://www.docker.com/) (optional, to run via container)
+
+---
+
+### 2. Database Configuration
+
+Edit `appsettings.json` in `Ambev.DeveloperEvaluation.WebApi`:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Host=localhost;Port=5432;Database=DeveloperEvaluation;Username=postgres;Password=postgres"
+}
+```
+
+⚠️ Ensure PostgreSQL is running and the credentials are correct.
+
+---
+
+### 3. Apply Migrations
+
+From the root of the solution:
+
+```bash
+dotnet build
+dotnet ef database update --project ./src/Ambev.DeveloperEvaluation.ORM --startup-project ./src/Ambev.DeveloperEvaluation.WebApi --context DefaultContext
+```
+
+---
+
+### 4. Run the Application Locally
+
+From the `src/Ambev.DeveloperEvaluation.WebApi` folder:
+
+```bash
+dotnet run
+```
+
+API will run on:
+
+- `https://localhost:5001`
+- `http://localhost:5000`
+
+---
+
+## 🐳 Running via Docker
+
+### 1. Build the Docker Image
+
+```bash
+docker build -t ambev-evaluation-api -f src/Ambev.DeveloperEvaluation.WebApi/Dockerfile .
+```
+
+### 2. Run the Container
+
+```bash
+docker run -d -p 8080:8080 -e ASPNETCORE_URLS=http://+:8080 --name ambev-api ambev-evaluation-api
+```
+
+API available at `http://localhost:8080`
+
+---
+
+## 📮 API Endpoints
+
+### 🔹 Create a Sale
+
+**POST** `/api/sales`
+
+```json
+{
+  "saleNumber": "001",
+  "date": "2025-08-01T12:00:00Z",
+  "customerId": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+  "customerName": "Sample Customer",
+  "branchId": "BR001",
+  "branchName": "SP Branch",
+  "items": [
+    {
+      "productId": "f6e8c7ac-df8f-4d17-91b5-b61a93a3b3a0",
+      "productName": "Product A",
+      "quantity": 5,
+      "unitPrice": 10.0
+    }
+  ]
+}
+```
+
+### 🔹 Get Sale by ID
+
+**GET** `/api/sales/{id}`
+
+### 🔹 List All Sales
+
+**GET** `/api/sales`
+
+### 🔹 Cancel a Sale
+
+**PUT** `/api/sales/{id}/cancel`
+
+### 🔹 Cancel a Sale Item
+
+**PUT** `/api/sales/{saleId}/items/{itemId}/cancel`
+
+---
+
+## ✅ Business Rules
+
+- Up to 3 units: no discount
+- 4 to 9 units: 10% discount
+- 10 to 20 units: 20% discount
+- Sales above 20 units per item are not allowed
+
+---
+
+## 🧪 Testing
+
+Tests are located under `/Tests` and include unit, integration, and functional tests (in progress).
+
+---
+
+## 📫 Contact
+
+For questions or suggestions, feel free to contact the repository maintainer on GitHub.
+
+
+
+
 # Developer Evaluation Project
 
 `READ CAREFULLY`

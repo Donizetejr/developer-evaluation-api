@@ -2,17 +2,18 @@
 {
     public class CreateSaleItemCommand
     {
-        public CreateSaleItemCommand(Guid productId, string productName, int quantity)
+        public CreateSaleItemCommand() { }
+
+        public CreateSaleItemCommand(Guid productId, string productName, int quantity, decimal unitPrice)
         {
             ProductId = productId;
+            ProductName = productName;
             Quantity = quantity;
-        }
-
-        public CreateSaleItemCommand(Guid productId, string productName, int quantity, decimal unitPrice) : this(productId, productName, quantity)
-        {
+            UnitPrice = unitPrice;
         }
 
         public Guid ProductId { get; set; }
+        public string ProductName { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
     }

@@ -8,16 +8,18 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.Commands
         public DateTime Date { get; set; }
         public Guid CustomerId { get; set; }
         public string CustomerName { get; set; }
-        public string BranchId { get; set; }
+        public Guid BranchId { get; set; }
         public string BranchName { get; set; }
         public List<CreateSaleItemCommand> Items { get; set; }
+
+        public CreateSaleCommand() { }
 
         public CreateSaleCommand(
             string saleNumber,
             DateTime date,
             Guid customerId,
             string customerName,
-            string branchId,
+            Guid branchId,
             string branchName,
             List<CreateSaleItemCommand> items)
         {
